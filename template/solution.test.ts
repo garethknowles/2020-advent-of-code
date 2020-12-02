@@ -3,12 +3,14 @@ import { solve } from './solve'
 
 const testSet = [
   [
-    ['a', 'b'],
-    ['a', 'b'],
+    {
+      input: ['a', 'b'],
+      expected: ['a', 'b'],
+    },
   ],
 ]
 
-test.each(testSet)('solution(%i, %i)', async (input, expected) => {
+test.each(testSet)('solution(%i, %i)', async ({ input, expected }) => {
   const result = await solution(input)
   expect(result).toEqual(expected)
 })

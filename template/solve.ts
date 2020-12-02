@@ -12,6 +12,7 @@ export const solve = async () => {
 
   const result = await solution(inputFile)
   shouldConsoleResult && console.log(result)
+  return result
 }
 
 solve()
