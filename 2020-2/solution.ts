@@ -5,6 +5,11 @@ type Value = {
   password: string
 }
 
+export enum Policy {
+  PolicyOne,
+  PolicyTwo,
+}
+
 const splitValues = (input: string): Value => {
   const match = input.match(/([0-9]+)-([0-9]+) ([a-z]): ([a-z]*)/)
   return {
@@ -15,16 +20,30 @@ const splitValues = (input: string): Value => {
   }
 }
 
-const check = (value: Value) => {
+const policyOneCheck = (value: Value) => {
   const countOfLetter = value.password.split('').filter((l) => l === value.character).length
   const result = countOfLetter > 0 && countOfLetter >= value.rangeLower && countOfLetter <= value.rangeUpper
-  console.log(countOfLetter, value, result)
   return result
 }
 
-export const solution = async (input: string[]) => {
+const policyTwoCheck = (value: Value) => {
+  const characters = value.password.split('')
+  const firstMatch = characters[value.rangeLower - 1] === value.character
+  const secondMatch = characters[value.rangeUpper - 1] === value.character
+  return (firstMatch && !secondMatch) || (secondMatch && !firstMatch)
+}
+
+const check = (policy: Policy) => {
+  switch (policy) {
+    case Policy.PolicyTwo:
+      return policyTwoCheck
+    case Policy.PolicyOne:
+      return policyOneCheck
+  }
+}
+
+export const solution = async (input: string[], policy: Policy = Policy.PolicyOne) => {
   const values = input.map(splitValues)
-  console.log('Value count', values.length)
-  const count = values.filter(check).length
+  const count = values.filter(check(policy)).length
   return String(count)
 }
