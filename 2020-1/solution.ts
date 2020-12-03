@@ -1,24 +1,31 @@
-import { exit } from 'process'
-
 const sumValue = 2020
 
 const toNumbers = (input: string[]) => input.map((i) => Number(i))
 
-const createPairs = (a: number[], b: number[]) => {
-  return a.map((aElement) => b.map((beElement) => [aElement, beElement])).reduce((acc, val) => acc.concat(val), [])
+const findValue = (array: number[], size: number) => {
+  for (let i = 0; i < array.length; i++) {
+    for (let j = i + 1; j < array.length; j++) {
+      if (size === 2 && array[i] + array[j] === sumValue) {
+        return array[i] * array[j]
+      } else if (size === 3) {
+        for (let k = i + 1; k < array.length; k++) {
+          if (array[i] + array[j] + array[k] === sumValue) {
+            return array[i] * array[j] * array[k]
+          }
+        }
+      }
+    }
+  }
+  return undefined
 }
 
-const findResult = (pairs: number[][]) => pairs.find(([i, j]) => i + j === sumValue)
-
-export const solution = async (input: string[]) => {
+export const solution = async (input: string[], size: number) => {
   const values = toNumbers(input)
-  const pairs = createPairs(values, values.slice(1))
-  const resultPair = findResult(pairs)
+  const result = findValue(values, size)
 
-  if (resultPair?.length !== 2) {
+  if (!result) {
     return undefined
   }
-
-  const result = resultPair[0] * resultPair[1]
+  // const result = resultGroup[0] * resultGroup[1] * resultGroup[2]
   return String(result)
 }

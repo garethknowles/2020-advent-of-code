@@ -4,33 +4,47 @@ import { solve } from './solve'
 const testSet = [
   {
     input: ['1721', '979', '366', '299', '675', '145', '6'],
-    expected: '514579',
+    expectedA: '514579',
+    expectedB: '241861950',
   },
   {
-    input: ['2020', '0'],
-    expected: '0',
+    input: ['2000', '20', '19', '1'],
+    expectedA: '40000',
+    expectedB: '38000',
   },
   {
     input: ['2019', '1'],
-    expected: '2019',
+    expectedA: '2019',
+    expectedB: undefined,
   },
   {
     input: [],
-    expected: undefined,
+    expectedA: undefined,
+    expectedB: undefined,
   },
   {
     input: ['2020', '123', '1'],
-    expected: undefined,
+    expectedA: undefined,
+    expectedB: undefined,
   },
 ]
 
-test.each(testSet)('solution(%i, %i)', async ({ input, expected }) => {
-  const result = await solution(input)
+test.each(testSet)('solution(%i, %i)', async ({ input, expectedA, expectedB }) => {
+  const resultA = await solution(input, 2)
+  expect(resultA).toEqual(expectedA)
+
+  const resultB = await solution(input, 3)
+  expect(resultB).toEqual(expectedB)
+})
+
+test('solutionA', async () => {
+  const expected = '436404'
+  const result = await solve(2)
   expect(result).toEqual(expected)
 })
 
-test('solution', async () => {
-  const expected = '436404'
-  const result = await solve()
+test('solutionB', async () => {
+  const expected = '274879808'
+  const result = await solve(3)
   expect(result).toEqual(expected)
 })
