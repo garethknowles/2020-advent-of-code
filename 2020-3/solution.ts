@@ -10,6 +10,10 @@ class Grid {
 
   constructor(input: string[]) {
     this.grid = input.map((line) => line.split('').map((char) => (char === '#' ? Square.Tree : Square.Open)))
+    this.reset()
+  }
+
+  reset() {
     this.currentPosition = [0, 0]
     this.visitedSquares = []
     this.move(0, 0)
@@ -38,11 +42,17 @@ class Grid {
   visitedTreeCount(): number {
     return this.visitedSquares.filter((s) => s === Square.Tree).length
   }
+
+  runForSlope(right: number, down: number): number {
+    this.reset()
+    this.moveDownInSteps(right, down)
+    return this.visitedTreeCount()
+  }
 }
 
-export const solution = async (input: string[]) => {
+export const solution = async (input: string[], slopes: number[][] = [[3, 1]]) => {
   const grid = new Grid(input)
-  grid.moveDownInSteps(3, 1)
-  const trees = grid.visitedTreeCount()
-  return trees
+
+  const results = slopes.map((slope) => grid.runForSlope(slope[0], slope[1]))
+  return results.reduce((prev, cur) => prev * cur)
 }
