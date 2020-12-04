@@ -27,7 +27,22 @@ test('exampleSet', async () => {
   expect(result).toEqual(2)
 })
 
-test('solution', async () => {
-  const result = await solve()
+test('solutionA', async () => {
+  const result = await solve('./input.txt')
   expect(result).toEqual(235)
+})
+
+test('exampleSetB2', async () => {
+  const result = await solve('example2.txt', true)
+  expect(result).toEqual(4)
+})
+
+test('exampleSetB3', async () => {
+  const result = await solve('example3.txt', true)
+  expect(result).toEqual(0)
+})
+
+test('solutionB', async () => {
+  const result = await solve('./input.txt', true)
+  expect(result).toEqual(194)
 })
