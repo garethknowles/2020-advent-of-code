@@ -42,3 +42,8 @@ test('solution', async () => {
   const result = await solve()
   expect(result).toEqual(838)
 })
+
+test('solutionB', async () => {
+  const result = await solve(true)
+  expect(result).toEqual(714)
+})
