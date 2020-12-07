@@ -12,7 +12,7 @@ interface BagMapping {
 
 const parseBags = (input: string): BagMapping => {
   const [name, outputBagsString] = input.split(' bags contain ')
-  const outputBags = outputBagsString.split(', ')
+  const outputBags = outputBagsString === 'no other bags.' ? [] : outputBagsString.split(', ')
   const outputs: OutputMap[] = outputBags.map((outputBagString) => {
     const cleaned = outputBagString.replace('.', '').replace('bags', '').replace('bag', '').trim()
     const count = Number(cleaned.substring(0, 1))
@@ -28,24 +28,20 @@ const parseBags = (input: string): BagMapping => {
   }
 }
 
-function flatten(arr) {
-  return arr.reduce(function (flat, toFlatten) {
-    return flat.concat(Array.isArray(toFlatten) ? flatten(toFlatten) : toFlatten)
-  }, [])
-}
-
-function findBagsWithOutput(mappings: BagMapping[], searchBag: string): string[] {
-  const immediateMaps = mappings.filter((map) => map.outputs.find(({ name }) => name === searchBag)).map((b) => b.name)
-  if (immediateMaps.length === 0) {
-    return [searchBag]
-  } else {
-    return [searchBag, ...flatten(immediateMaps.map((bag) => findBagsWithOutput(mappings, bag)))]
+function calulateBagTotals(mappings: BagMapping[], bagName: string): number {
+  const bag = mappings.find(({ name }) => bagName === name)
+  const outputs = bag.outputs
+  if (outputs.length === 0) {
+    return 1
   }
-}
 
-const findAllBagsWithOutput = (mappings: BagMapping[], searchBag: string): string[] => {
-  const result = findBagsWithOutput(mappings, searchBag)
-  return [...new Set(result)].filter((b) => b !== searchBag) //?
+  return (
+    outputs
+      .map(({ name, count }) => {
+        return count * calulateBagTotals(mappings, name)
+      })
+      .reduce((p, c) => p + c) + 1
+  )
 }
 
 const startBagName = 'shiny gold'
@@ -53,6 +49,5 @@ const startBagName = 'shiny gold'
 export const solution = async ({ fileName, input }: { fileName?: string; input?: string[] }) => {
   const data: string[] = await handleInputs({ fileName, input })
   const mappings = data.map(parseBags)
-  const bagsContainingGold = findAllBagsWithOutput(mappings, startBagName)
-  return bagsContainingGold.length
+  return calulateBagTotals(mappings, startBagName) - 1
 }

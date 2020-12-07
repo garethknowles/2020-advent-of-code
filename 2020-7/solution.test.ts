@@ -1,13 +1,6 @@
 import { solution } from './solution'
 
 const testSet = [
-  // {
-  //   input: [
-  //     'vibrant purple bags contain 3 shiny lavender bags, 1 mirrored gray bag, 4 muted bronze bags.',
-  //     'striped crimson bags contain 2 shiny gold bags, 4 pale indigo bags, 4 light maroon bags.',
-  //   ],
-  //   expected: 1,
-  // },
   {
     input: [
       'light red bags contain 1 bright white bag, 2 muted yellow bags.',
@@ -20,7 +13,7 @@ const testSet = [
       'faded blue bags contain no other bags.',
       'dotted black bags contain no other bags.',
     ],
-    expected: 4,
+    expected: 32,
   },
 ]
 
@@ -29,8 +22,14 @@ test.each(testSet)('solution(%i, %i)', async ({ input, expected }) => {
   expect(result).toEqual(expected)
 })
 
-test('solution', async () => {
-  const expected = 119
+test('b - example1', async () => {
+  const expected = 126
+  const result = await solution({ fileName: 'example1.txt' })
+  expect(result).toEqual(expected)
+})
+
+test('solutionB', async () => {
+  const expected = 155802
   const result = await solution({ fileName: 'input.txt' })
   expect(result).toEqual(expected)
 })
