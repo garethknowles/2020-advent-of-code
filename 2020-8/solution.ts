@@ -17,15 +17,14 @@ const parseInstruction = (input: string): Instruction => {
   }
 }
 
-const runInstructions = (code: Instruction[]): number => {
+const runInstructions = (code: Instruction[], solutionB = false): number => {
   const alreadyRunCode: Instruction[] = []
   let pointer = 0
   let accumulator = 0
-  while (true) {
-    pointer
+  while (pointer < code.length) {
     const currentInstruction = code[pointer]
     if (alreadyRunCode.includes(currentInstruction)) {
-      return accumulator
+      return solutionB ? undefined : accumulator
     }
     if (currentInstruction.operation === 'acc') {
       accumulator += currentInstruction.argument
@@ -37,11 +36,37 @@ const runInstructions = (code: Instruction[]): number => {
     }
     alreadyRunCode.push(currentInstruction)
   }
+  return solutionB ? accumulator : undefined
 }
 
-export const solution = async ({ fileName, input }: { fileName?: string; input?: string[] }) => {
+const replaceCode = (originalCode: Instruction[], instructionToReplace: Instruction): Instruction[] => {
+  const newCode = [...originalCode]
+  const index = newCode.findIndex((i) => i === instructionToReplace)
+  const replacement: Instruction = {
+    operation: instructionToReplace.operation === 'jmp' ? 'nop' : 'jmp',
+    argument: instructionToReplace.argument,
+  }
+  newCode[index] = replacement
+  return newCode
+}
+
+const tryReplacingInstructions = (originalCode: Instruction[]): number => {
+  const jumpsReplaced = originalCode.filter(({ operation }) => operation === 'jmp').map((i) => replaceCode(originalCode, i))
+  const nopsReplaced = originalCode.filter(({ operation }) => operation === 'nop').map((i) => replaceCode(originalCode, i))
+  const newCodeSets = [...jumpsReplaced, ...nopsReplaced]
+  let result: number
+  newCodeSets.find((newCode) => {
+    result = runInstructions(newCode, true)
+    return result !== undefined
+  })
+  return result
+}
+
+export const solution = async ({ fileName, input, solutionB = false }: { fileName?: string; input?: string[]; solutionB?: boolean }) => {
   const data: string[] = await handleInputs({ fileName, input })
   const instructions = parseAllInstructions(data)
-  const result = runInstructions(instructions) //?
+
+  const result = solutionB ? tryReplacingInstructions(instructions) : runInstructions(instructions)
+
   return result
 }

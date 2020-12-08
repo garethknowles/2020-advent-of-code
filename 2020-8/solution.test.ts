@@ -11,3 +11,15 @@ test('solution', async () => {
   const result = await solution({ fileName: 'input.txt' })
   expect(result).toEqual(expected)
 })
+
+test('example1b', async () => {
+  const expected = 8
+  const result = await solution({ fileName: 'example1.txt', solutionB: true })
+  expect(result).toEqual(expected)
+})
+
+test('solutionB', async () => {
+  const expected = 1016
+  const result = await solution({ fileName: 'input.txt', solutionB: true })
+  expect(result).toEqual(expected)
+})
