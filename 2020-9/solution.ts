@@ -1,13 +1,11 @@
 import { handleInputs } from './inputHelpers'
 
 const setThatSums = (data: number[], sumResult: number): number[] => {
-  console.log(sumResult)
   for (let setSize = 2; setSize < data.length; setSize++) {
     for (let i = 0; i < data.length - setSize; i++) {
       const set = data.slice(i, i + setSize)
       const setTotal = set.reduce((prev, cur) => prev + cur, 0)
       if (setTotal === sumResult) {
-        console.log(set)
         return set
       }
     }
@@ -39,10 +37,7 @@ const findInvalidNumber = (data: number[], preambleSize: number) => {
 }
 
 const findEncryptionWeakness = (data: number[], invalidNumber: number) => {
-  ;[3, 21, 11].sort() //?
-  ;[3, 21, 11].sort((a, b) => (a < b ? -1 : 1)) //?
-
-  const set = setThatSums(data, invalidNumber).sort((a, b) => (a < b ? -1 : 1)) //?
+  const set = setThatSums(data, invalidNumber).sort((a, b) => (a < b ? -1 : 1))
   return set[0] + set.reverse()[0]
 }
 
